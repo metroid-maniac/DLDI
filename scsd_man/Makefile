@@ -39,7 +39,7 @@ CFLAGS	+=	$(INCLUDE) -DARM9 -fPIC
 CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions
 
 ASFLAGS	:=	-g $(ARCH)
-LDFLAGS	=	-specs=$(CURDIR)/../$(SPECS)/dldi.specs -T $(CURDIR)/../$(SPECS)/dldi.ld -g $(ARCH) -mfpu=auto -Wl,-Map,$(TARGET).map
+LDFLAGS	=	-specs=$(CURDIR)/../$(SPECS)/dldi.specs -T $(CURDIR)/../$(SPECS)/dldi.ld -g $(ARCH) -msoft-float -Wl,-Map,$(TARGET).map
 
 LIBS	:= -lnds9
 

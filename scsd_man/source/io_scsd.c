@@ -53,6 +53,8 @@
 
 //---------------------------------------------------------------
 // SCSD register addresses
+#define REG_SCSD_MODE (*(vu16*) 0x09fffffe)
+
 #define REG_SCSD_CMD	(*(vu16*)(0x09800000))
 	/* bit 0: command bit to read  		*/
 	/* bit 7: command bit to write 		*/
@@ -65,6 +67,11 @@
 	/* bit 0: 1				*/
 	/* bit 1: enable IO interface (SD,CF)	*/
 	/* bit 2: enable R/W SDRAM access 	*/
+	
+	
+//---------------------------------------------------------------
+#define SC_MODE_MAGIC ((u16) 0xa55a)
+#define SC_MODE_MEDIA ((u16) 3)
 
 //---------------------------------------------------------------
 // Responses
@@ -272,12 +279,24 @@ static bool _SCSD_readData (void* buffer) {
 
 //---------------------------------------------------------------
 // Functions needed for the external interface
-
+/*
 bool _SCSD_startUp (void) {
 	_SCSD_unlock();
 	return _SCSD_initCard();
 }
+*/
 
+bool _SCSD_isInserted();
+
+bool _SCSD_startUp(void) {
+	REG_SCSD_MODE = SC_MODE_MAGIC;
+	REG_SCSD_MODE = SC_MODE_MAGIC;
+	REG_SCSD_MODE = SC_MODE_MEDIA;
+	REG_SCSD_MODE = SC_MODE_MEDIA;
+	return _SCSD_isInserted();
+}
+
+/*
 bool _SCSD_isInserted (void) {
 	u8 responseBuffer [6];
 
@@ -294,6 +313,12 @@ bool _SCSD_isInserted (void) {
 		return false;
 	}
 	return true;
+}
+*/
+
+bool _SCSD_isInserted(void) {
+	return true;
+	return REG_SCSD_CMD & 0x300;
 }
 
 bool _SCSD_readSectors (u32 sector, u32 numSectors, void* buffer) {
@@ -376,13 +401,26 @@ bool _SCSD_writeSectors (u32 sector, u32 numSectors, const void* buffer) {
 	return true;
 }
 
+/*
 bool _SCSD_clearStatus (void) {
 	return _SCSD_initCard ();
 }
+*/
 
+// stub!
+bool _SCSD_clearStatus (void){
+	return true;
+}
+
+/*
 bool _SCSD_shutdown (void) {
 	_SC_changeMode (SC_MODE_RAM_RO);
 	return true;
+}
+*/
+
+bool _SCSD_shutdown(void) {
+	return _SCSD_clearStatus();
 }
 
 
