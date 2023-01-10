@@ -317,8 +317,7 @@ bool _SCSD_isInserted (void) {
 */
 
 bool _SCSD_isInserted(void) {
-	return true;
-	return REG_SCSD_CMD & 0x300;
+	return !(REG_SCSD_CMD & 0x300);
 }
 
 bool _SCSD_readSectors (u32 sector, u32 numSectors, void* buffer) {
